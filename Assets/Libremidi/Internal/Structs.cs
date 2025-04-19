@@ -34,8 +34,8 @@ public enum Api : int
 [StructLayout(LayoutKind.Sequential)]
 public struct ApiConfiguration
 {
-    public int api;
-    public ConfigurationType configuration_type;
+    public Api api;
+    public ConfigurationType configurationType;
     public IntPtr data;
 
     public enum ConfigurationType

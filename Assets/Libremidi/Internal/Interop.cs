@@ -26,7 +26,7 @@ public static class Interop
     public static extern Api GetCompiledApiByIdentifier(string id);
 
     [DllImport(dllName, EntryPoint = "libremidi_midi_api_configuration_init")]
-    public static extern int MidiApiConfigurationInit(ref ApiConfiguration cfg);
+    public static extern int MidiApiConfigurationInit(out ApiConfiguration cfg);
 
     [DllImport(dllName, EntryPoint = "libremidi_midi_observer_configuration_init")]
     public static extern int MidiObserverConfigurationInit(ref ObserverConfiguration cfg);

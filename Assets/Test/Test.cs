@@ -12,5 +12,10 @@ public sealed class Test : MonoBehaviour
               => Debug.Log($"{api}" +
                            $" : {MidiSystem.GetApiIdentifier(api)}" +
                            $" : {MidiSystem.GetApiDisplayName(api)}"));
+
+        ApiConfiguration apiConfig;
+        Interop.MidiApiConfigurationInit(out apiConfig);
+
+        Debug.Log($"{apiConfig.api} {apiConfig.configurationType}");
     }
 }
