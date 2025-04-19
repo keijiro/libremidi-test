@@ -7,6 +7,7 @@ public static class Interop
 {
     const string dllName = "liblibremidi.dylib";
 
+    // API utilities
     [DllImport(dllName, EntryPoint = "libremidi_get_version")]
     public static extern IntPtr GetVersion();
 
@@ -25,39 +26,49 @@ public static class Interop
     [DllImport(dllName, EntryPoint = "libremidi_get_compiled_api_by_identifier")]
     public static extern Api GetCompiledApiByIdentifier(string id);
 
+    // Create configurations
     [DllImport(dllName, EntryPoint = "libremidi_midi_api_configuration_init")]
     public static extern int MidiApiConfigurationInit(out ApiConfiguration cfg);
 
     [DllImport(dllName, EntryPoint = "libremidi_midi_observer_configuration_init")]
-    public static extern int MidiObserverConfigurationInit(ref ObserverConfiguration cfg);
+    public static extern int MidiObserverConfigurationInit(out ObserverConfiguration cfg);
 
     [DllImport(dllName, EntryPoint = "libremidi_midi_configuration_init")]
     public static extern int MidiConfigurationInit(ref MidiConfiguration cfg);
 
+    // Read information about port objects
     [DllImport(dllName, EntryPoint = "libremidi_midi_in_port_clone")]
-    public static extern int MidiInPortClone(IntPtr port, IntPtr dst);
+    public static extern int MidiInPortClone(IntPtr port, out IntPtr dst);
 
     [DllImport(dllName, EntryPoint = "libremidi_midi_in_port_free")]
     public static extern int MidiInPortFree(IntPtr port);
 
     [DllImport(dllName, EntryPoint = "libremidi_midi_in_port_name")]
-    public static extern int MidiInPortName(IntPtr port, IntPtr name, IntPtr len);
+    public static extern int MidiInPortName(IntPtr port, out IntPtr name, out int len);
 
     [DllImport(dllName, EntryPoint = "libremidi_midi_out_port_clone")]
-    public static extern int MidiOutPortClone(IntPtr port, IntPtr dst);
+    public static extern int MidiOutPortClone(IntPtr port, out IntPtr dst);
 
     [DllImport(dllName, EntryPoint = "libremidi_midi_out_port_free")]
     public static extern int MidiOutPortFree(IntPtr port);
 
     [DllImport(dllName, EntryPoint = "libremidi_midi_out_port_name")]
-    public static extern int MidiOutPortName(IntPtr port, IntPtr name, IntPtr len);
+    public static extern int MidiOutPortName(IntPtr port, out IntPtr name, out int len);
 
+    // Observer API
     [DllImport(dllName, EntryPoint = "libremidi_midi_observer_new")]
-    public static extern int MidiObserverNew(in ObserverConfiguration ob_cfg, ref ApiConfiguration api_cfg, IntPtr handle);
+    public static extern int MidiObserverNew(in ObserverConfiguration ob_cfg, ref ApiConfiguration api_cfg, out IntPtr handle);
+
+    [DllImport(dllName, EntryPoint = "libremidi_midi_observer_enumerate_input_ports")]
+    public static extern int MidiObserverEnumerateInput(IntPtr handle, IntPtr ctx, IntPtr cb);
+
+    [DllImport(dllName, EntryPoint = "libremidi_midi_observer_enumerate_output_ports")]
+    public static extern int MidiObserverEnumerateOutput(IntPtr handle, IntPtr ctx, IntPtr cb);
 
     [DllImport(dllName, EntryPoint = "libremidi_midi_observer_free")]
     public static extern int MidiObserverFree(IntPtr handle);
 
+    // MIDI input API (read MIDI messages)
     [DllImport(dllName, EntryPoint = "libremidi_midi_in_new")]
     public static extern int MidiInNew(in MidiConfiguration mcfg, in ApiConfiguration acfg, IntPtr handle);
 
@@ -70,6 +81,7 @@ public static class Interop
     [DllImport(dllName, EntryPoint = "libremidi_midi_in_free")]
     public static extern int MidiInFree(IntPtr handle);
 
+    // MIDI output API (send MIDI messages)
     [DllImport(dllName, EntryPoint = "libremidi_midi_out_new")]
     public static extern int MidiOutNew(in MidiConfiguration midi, in ApiConfiguration api, IntPtr handle);
 
@@ -90,7 +102,6 @@ public static class Interop
 
     [DllImport(dllName, EntryPoint = "libremidi_midi_out_free")]
     public static extern int MidiOutFree(IntPtr handle);
-
 }
 
 } // namespace Libremidi

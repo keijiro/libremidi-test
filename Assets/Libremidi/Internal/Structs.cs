@@ -49,35 +49,35 @@ public struct ApiConfiguration
 [StructLayout(LayoutKind.Sequential)]
 public struct ObserverConfiguration
 {
-    public libremidi_callback on_error;
-    public libremidi_callback on_warning;
+    public Callback onError;
+    public Callback onWarning;
 
-    public libremidi_input_port_event input_added;
-    public libremidi_input_port_event input_removed;
-    public libremidi_output_port_event output_added;
-    public libremidi_output_port_event output_removed;
+    public InputPortEvent inputAdded;
+    public InputPortEvent inputRemoved;
+    public OutputPortEvent outputAdded;
+    public OutputPortEvent outputRemoved;
 
-    [MarshalAs(UnmanagedType.I1)] public bool track_hardware;
-    [MarshalAs(UnmanagedType.I1)] public bool track_virtual;
-    [MarshalAs(UnmanagedType.I1)] public bool track_any;
-    [MarshalAs(UnmanagedType.I1)] public bool notify_in_constructor;
+    [MarshalAs(UnmanagedType.I1)] public bool trackHardware;
+    [MarshalAs(UnmanagedType.I1)] public bool trackVirtual;
+    [MarshalAs(UnmanagedType.I1)] public bool trackAny;
+    [MarshalAs(UnmanagedType.I1)] public bool notifyInConstructor;
 
     [StructLayout(LayoutKind.Sequential)]
-    public struct libremidi_callback
+    public struct Callback
     {
         public IntPtr context;
         public IntPtr callback; // void (*)(void*, const char*, size_t, const void*)
     }
 
     [StructLayout(LayoutKind.Sequential)]
-    public struct libremidi_input_port_event
+    public struct InputPortEvent
     {
         public IntPtr context;
         public IntPtr callback; // void (*)(void*, const libremidi_midi_in_port*)
     }
 
     [StructLayout(LayoutKind.Sequential)]
-    public struct libremidi_output_port_event
+    public struct OutputPortEvent
     {
         public IntPtr context;
         public IntPtr callback; // void (*)(void*, const libremidi_midi_out_port*)
@@ -118,8 +118,8 @@ public struct MidiConfiguration
 
     public libremidi_timestamp_callback get_timestamp;
 
-    public ObserverConfiguration.libremidi_callback on_error;
-    public ObserverConfiguration.libremidi_callback on_warning;
+    public ObserverConfiguration.Callback on_error;
+    public ObserverConfiguration.Callback on_warning;
 
     public IntPtr port_name; // const char*
     [MarshalAs(UnmanagedType.I1)] public bool virtual_port;
