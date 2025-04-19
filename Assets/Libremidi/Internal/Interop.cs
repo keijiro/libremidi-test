@@ -3,7 +3,7 @@ using System.Runtime.InteropServices;
 
 namespace Libremidi {
 
-public static class LibremidiWrapper
+public static class Interop
 {
     const string dllName = "liblibremidi.dylib";
 
