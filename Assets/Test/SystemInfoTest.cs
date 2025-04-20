@@ -3,7 +3,7 @@ using Libremidi;
 using System;
 using System.Runtime.InteropServices;
 
-public sealed class Test : MonoBehaviour
+public sealed class SystemInfoTest : MonoBehaviour
 {
     public delegate void PortCallback(IntPtr ctx, IntPtr port);
 
