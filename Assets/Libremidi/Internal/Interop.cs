@@ -34,7 +34,7 @@ public static class Interop
     public static extern int MidiObserverConfigurationInit(out ObserverConfiguration cfg);
 
     [DllImport(dllName, EntryPoint = "libremidi_midi_configuration_init")]
-    public static extern int MidiConfigurationInit(ref MidiConfiguration cfg);
+    public static extern int MidiConfigurationInit(out MidiConfiguration cfg);
 
     // Read information about port objects
     [DllImport(dllName, EntryPoint = "libremidi_midi_in_port_clone")]
@@ -70,7 +70,7 @@ public static class Interop
 
     // MIDI input API (read MIDI messages)
     [DllImport(dllName, EntryPoint = "libremidi_midi_in_new")]
-    public static extern int MidiInNew(in MidiConfiguration mcfg, in ApiConfiguration acfg, IntPtr handle);
+    public static extern int MidiInNew(in MidiConfiguration mcfg, in ApiConfiguration acfg, out IntPtr handle);
 
     [DllImport(dllName, EntryPoint = "libremidi_midi_in_is_connected")]
     public static extern int MidiInIsConnected(IntPtr handle);
