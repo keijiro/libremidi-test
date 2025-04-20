@@ -13,7 +13,7 @@ public sealed class MidiInTest : MonoBehaviour
     public delegate void PortCallback(IntPtr ctx, IntPtr port);
     public delegate void EventCallback(IntPtr ctx, long time, IntPtr data, nuint size);
 
-    void OnMidiInEvent(IntPtr ctx, long time, IntPtr pData, nuint size)
+    static void OnMidiInEvent(IntPtr ctx, long time, IntPtr pData, nuint size)
     {
         var line = "";
         unsafe
@@ -62,7 +62,7 @@ public sealed class MidiInTest : MonoBehaviour
 
         ApiConfiguration api_cfg;
         Interop.MidiApiConfigurationInit(out api_cfg);
-        api_cfg.configurationType = ApiConfiguration.ConfigurationType.Observer;
+        api_cfg.configurationType = ConfigurationType.Observer;
 
         Interop.MidiObserverNew(ob_cfg, ref api_cfg, out _observer);
 
@@ -74,21 +74,21 @@ public sealed class MidiInTest : MonoBehaviour
 
         MidiConfiguration midi;
         Interop.MidiConfigurationInit(out midi);
-        midi.version = MidiConfiguration.MidiVersion.MIDI1;
+        midi.version = MidiVersion.Midi1;
         midi.port = _inPorts[0];
-        midi.midi1_cb.callback = 
+        midi.onData =
           Marshal.GetFunctionPointerForDelegate((EventCallback)OnMidiInEvent);
 
-        api_cfg.configurationType = ApiConfiguration.ConfigurationType.Input;
+        api_cfg.configurationType = ConfigurationType.Input;
 
         Interop.MidiInNew(midi, api_cfg, out _midiIn);
     }
 
     void OnDestroy()
     {
+        if (_midiIn != IntPtr.Zero) Interop.MidiInFree(_midiIn);
         foreach (var port in _inPorts) Interop.MidiInPortFree(port);
         foreach (var port in _outPorts) Interop.MidiOutPortFree(port);
-        if (_midiIn != IntPtr.Zero) Interop.MidiInFree(_midiIn);
         if (_observer != IntPtr.Zero) Interop.MidiObserverFree(_observer);
     }
 }

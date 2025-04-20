@@ -3,7 +3,7 @@ using System.Runtime.InteropServices;
 
 namespace Libremidi {
 
-public enum Api : int
+public enum Api
 {
     // MIDI 1.0 APIs
     Unspecified = 0x0,      // Search for a working compiled API.
@@ -31,122 +31,93 @@ public enum Api : int
     Dummy = 0xFFFF          // A compilable but non-functional API
 }
 
+public enum ConfigurationType
+{
+    Observer = 0,
+    Input = 1,
+    Output = 2
+}
+
+public enum MidiVersion
+{
+    Midi1    = 1 << 1,
+    Midi1Raw = 1 << 2,
+    Midi2    = 1 << 3,
+    Midi2Raw = 1 << 4
+}
+
+public enum TimestampMode
+{
+    NoTimestamp = 0,
+    Relative,
+    Absolute,
+    SystemMonotonic,
+    AudioFrame,
+    Custom
+}
+
 [StructLayout(LayoutKind.Sequential)]
 public struct ApiConfiguration
 {
     public Api api;
     public ConfigurationType configurationType;
     public IntPtr data;
-
-    public enum ConfigurationType
-    {
-        Observer = 0,
-        Input = 1,
-        Output = 2
-    }
 }
 
 [StructLayout(LayoutKind.Sequential)]
 public struct ObserverConfiguration
 {
-    public Callback onError;
-    public Callback onWarning;
+    public IntPtr onErrorContext;
+    public IntPtr onError;
 
-    public InputPortEvent inputAdded;
-    public InputPortEvent inputRemoved;
-    public OutputPortEvent outputAdded;
-    public OutputPortEvent outputRemoved;
+    public IntPtr onWarningContext;
+    public IntPtr onWarning;
+
+    public IntPtr inputAddedContext;
+    public IntPtr inputAdded;
+
+    public IntPtr inputRemovedContext;
+    public IntPtr inputRemoved;
+
+    public IntPtr outputAddedContext;
+    public IntPtr outputAdded;
+
+    public IntPtr outputRemovedContext;
+    public IntPtr outputRemoved;
 
     [MarshalAs(UnmanagedType.I1)] public bool trackHardware;
     [MarshalAs(UnmanagedType.I1)] public bool trackVirtual;
     [MarshalAs(UnmanagedType.I1)] public bool trackAny;
     [MarshalAs(UnmanagedType.I1)] public bool notifyInConstructor;
-
-    [StructLayout(LayoutKind.Sequential)]
-    public struct Callback
-    {
-        public IntPtr context;
-        public IntPtr callback; // void (*)(void*, const char*, size_t, const void*)
-    }
-
-    [StructLayout(LayoutKind.Sequential)]
-    public struct InputPortEvent
-    {
-        public IntPtr context;
-        public IntPtr callback; // void (*)(void*, const libremidi_midi_in_port*)
-    }
-
-    [StructLayout(LayoutKind.Sequential)]
-    public struct OutputPortEvent
-    {
-        public IntPtr context;
-        public IntPtr callback; // void (*)(void*, const libremidi_midi_out_port*)
-    }
-}
-
-[StructLayout(LayoutKind.Sequential)]
-public struct libremidi_midi1_callback
-{
-    public IntPtr context;
-    public IntPtr callback; // void (*)(void*, libremidi_timestamp, const uint8_t*, size_t)
-}
-
-[StructLayout(LayoutKind.Sequential)]
-public struct libremidi_midi2_callback
-{
-    public IntPtr context;
-    public IntPtr callback; // void (*)(void*, libremidi_timestamp, const uint32_t*, size_t)
-}
-
-[StructLayout(LayoutKind.Sequential)]
-public struct libremidi_timestamp_callback
-{
-    public IntPtr context;
-    public IntPtr callback; // libremidi_timestamp (*)(void*, libremidi_timestamp)
 }
 
 [StructLayout(LayoutKind.Sequential)]
 public struct MidiConfiguration
 {
+
     public MidiVersion version;
+    public IntPtr port;
 
-    public IntPtr port; // in_port or out_port
+    public IntPtr onDataContext;
+    public IntPtr onData;
 
-    // Callbacks (union, so only one is used at a time)
-    public libremidi_midi1_callback midi1_cb;
-    // Alternatively: public libremidi_midi2_callback midi2_cb;
+    public IntPtr onTimestampContext;
+    public IntPtr onTimestamp;
 
-    public libremidi_timestamp_callback get_timestamp;
+    public IntPtr onErrorContext;
+    public IntPtr onError;
 
-    public ObserverConfiguration.Callback on_error;
-    public ObserverConfiguration.Callback on_warning;
+    public IntPtr onWarningContext;
+    public IntPtr onWarning;
 
-    public IntPtr port_name; // const char*
-    [MarshalAs(UnmanagedType.I1)] public bool virtual_port;
+    public IntPtr portName;
+    [MarshalAs(UnmanagedType.I1)] public bool virtualPort;
 
-    [MarshalAs(UnmanagedType.I1)] public bool ignore_sysex;
-    [MarshalAs(UnmanagedType.I1)] public bool ignore_timing;
-    [MarshalAs(UnmanagedType.I1)] public bool ignore_sensing;
+    [MarshalAs(UnmanagedType.I1)] public bool ignoreSysex;
+    [MarshalAs(UnmanagedType.I1)] public bool ignoreTiming;
+    [MarshalAs(UnmanagedType.I1)] public bool ignoreSensing;
 
-    public libremidi_timestamp_mode timestamps;
-
-    public enum MidiVersion
-    {
-        MIDI1 = (1 << 1),
-        MIDI1_RAW = (1 << 2),
-        MIDI2 = (1 << 3),
-        MIDI2_RAW = (1 << 4)
-    }
-
-    public enum libremidi_timestamp_mode
-    {
-        NoTimestamp = 0,
-        Relative,
-        Absolute,
-        SystemMonotonic,
-        AudioFrame,
-        Custom
-    }
+    public TimestampMode timestamps;
 }
 
 } // namespace Libremidi
